@@ -1,13 +1,14 @@
 {
   "name": "markdown2confluence",
-  "version": "1.1.2",
+  "version": "1.1.6",
   "description": "convert markdown to confluence markup",
   "main": "index.js",
   "scripts": {
-    "test": "node test.index.js",
+    "test": "node test.js",
 	"build": "npm run build-html && npm run build-js",
 	"build-html": "jade browser/index.jade",
-	"build-js": "browserify browser/main.js > browser/app.js"
+	"build-js": "browserify browser/main.js > browser/app.js",
+	"readme": "pretty-readme > readme.md"
   },
   "author": "ft",
   "license": "ISC",

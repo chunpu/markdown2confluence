@@ -14,76 +14,82 @@ var rawRenderer = marked.Renderer
 
 var langArr = 'actionscript3 bash csharp coldfusion cpp css delphi diff erlang groovy java javafx javascript perl php none powershell python ruby scala sql vb html/xml'.split(/\s+/)
 var langMap = {}
-for (var i = 0, x; x = langArr[i++];) { 
-    langMap[x] = x
+for (var i = 0, x; x = langArr[i++];) {
+	langMap[x] = x
 }
 
 _.extend(Renderer.prototype, rawRenderer.prototype, {
-      paragraph: function(text) {
-        return text + '\n\n'
-    }
-    , html: function(html) {
-        return html
-    }
-    , heading: function(text, level, raw) {
-        return 'h' + level + '. ' + text + '\n\n'
-    }
-    , strong: function(text) {
-        return '*' + text + '*'
-    }
-    , em: function(text) {
-        return '_' + text + '_'
-    }
-    , del: function(text) {
-        return '-' + text + '-'
-    }
-    , codespan: function(text) {
-        return '{{' + text + '}}'
-    }
-    , blockquote: function(quote) {
-        return '{quote}' + quote + '{quote}'
-    }
-    , br: function() {
-        return '\n'
-    }
-    , hr: function() {
-        return '----'
-    }
-    , link: function(href, title, text) {
-        var arr = [href]
-        if (title) {
-            arr.unshift(title)
-        }
-        return '[' + arr.join('|') + ']'
-    }
-    , list: function(body, ordered) {
-        return body + '\n'
-    }
-    , listitem: function(body, ordered) {
-        var type = ordered ? '#' : '*'
-        return type + ' ' + body + '\n'
-    }
-    , image: function(href, title, text) {
-        return '!' + href
-    }
-    , table: function(header, body) {
-        return header + body + '\n'
-    }
-    , tablerow: function(content, flags) {
-        return content + '\n'
-    }
-    , tablecell: function(content, flags) {
-        var type = flags.header ? '||' : '|'
-        return type + content
-    }
-    , code: function(code, lang) {
-        lang = langMap[lang] || langMap[langArr[0]]
-        return '{code:' + lang + '}\n' + code + '\n{code}\n\n'
-    }
+	  paragraph: function(text) {
+		return text + '\n\n'
+	}
+	, html: function(html) {
+		return html
+	}
+	, heading: function(text, level, raw) {
+		return 'h' + level + '. ' + text + '\n\n'
+	}
+	, strong: function(text) {
+		return '*' + text + '*'
+	}
+	, em: function(text) {
+		return '_' + text + '_'
+	}
+	, del: function(text) {
+		return '-' + text + '-'
+	}
+	, codespan: function(text) {
+		return '{{' + text + '}}'
+	}
+	, blockquote: function(quote) {
+		return '{quote}' + quote + '{quote}'
+	}
+	, br: function() {
+		return '\n'
+	}
+	, hr: function() {
+		return '----'
+	}
+	, link: function(href, title, text) {
+		var arr = [href]
+		if (title) {
+			arr.unshift(title)
+		}
+		return '[' + arr.join('|') + ']'
+	}
+	, list: function(body, ordered) {
+		var arr = _.filter(_.trim(body).split('\n'), function(line) {
+			return line
+		})
+		var type = ordered ? '#' : '*'
+		return _.map(arr, function(line) {
+			return type + ' ' + line
+		}).join('\n') + '\n\n'
+
+	}
+	, listitem: function(body, ordered) {
+		return body + '\n'
+	}
+	, image: function(href, title, text) {
+		return '!' + href
+	}
+	, table: function(header, body) {
+		return header + body + '\n'
+	}
+	, tablerow: function(content, flags) {
+		return content + '\n'
+	}
+	, tablecell: function(content, flags) {
+		var type = flags.header ? '||' : '|'
+		return type + content
+	}
+	, code: function(code, lang) {
+		lang = langMap[lang] || langMap[langArr[0]]
+		return '{code:' + lang + '}\n' + code + '\n{code}\n\n'
+	}
 })
 
 var renderer = new Renderer()
 
 function markdown2confluence(markdown) {
-    return marked(markdown, {renderer: renderer})
+	return marked(markdown, {renderer: renderer})
 }
