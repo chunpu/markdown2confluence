@@ -1,4 +1,5 @@
 var marked = require('marked')
+var _ = require('min-util')
 var inlineLexer = marked.inlineLexer
 
 module.exports = exports = markdown2confluence
@@ -6,21 +7,6 @@ module.exports = exports = markdown2confluence
 // https://roundcorner.atlassian.net/secure/WikiRendererHelpAction.jspa?section=all
 // https://confluence.atlassian.com/display/DOC/Confluence+Wiki+Markup
 // http://blogs.atlassian.com/2011/11/why-we-removed-wiki-markup-editor-in-confluence-4/
-
-function extend() {
-    var len = arguments.length
-    var target = arguments[0] || {}
-    var i = 1, obj
-    for (; i < len; i++) {
-        obj = arguments[i]
-        if (obj && 'object' == typeof obj) {
-            for (var k in obj) {
-                target[k] = obj[k]
-            }
-        }
-    }
-    return target
-}
 
 function Renderer() {}
 
@@ -32,7 +18,7 @@ for (var i = 0, x; x = langArr[i++];) {
     langMap[x] = x
 }
 
-extend(Renderer.prototype, rawRenderer.prototype, {
+_.extend(Renderer.prototype, rawRenderer.prototype, {
       paragraph: function(text) {
         return text + '\n\n'
     }

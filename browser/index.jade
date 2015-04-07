@@ -1,0 +1,23 @@
+block title
+	title markdown2confluence
+
+extend layout/basic
+
+block style
+	style.
+		textarea {
+			width: 600px;
+			height: 400px;
+		}
+
+block main
+	h1 put markdown here
+	textarea#markdown
+	p
+		button#convert convert
+	h1 generated confluence markup
+	textarea#markup
+
+block script
+	script(src='//code.jquery.com/jquery-1.11.2.min.js')
+	script(src='./app.js')
