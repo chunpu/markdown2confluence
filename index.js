@@ -38,7 +38,7 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 		return '-' + text + '-'
 	}
 	, codespan: function(text) {
-		return '{{' + text + '}}'
+		return ' *{{' + text + '}}* '
 	}
 	, blockquote: function(quote) {
 		return '{quote}' + quote + '{quote}'
