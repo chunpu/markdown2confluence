@@ -61,7 +61,12 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 			return line
 		})
 		var type = ordered ? '#' : '*'
-		return _.map(arr, function(line) {
+		// prefix with a \n to prevent the first child list item being concatenated onto the parent
+        	return '\n' + _.map(arr, function(line) {
+			// only insert a space if we have terminated any ordered/unordered list demarkation
+            		if (line.match(/^[*#]+\s.*/)) {
+                		return type + line    
+            		}
 			return type + ' ' + line
 		}).join('\n') + '\n\n'
 
