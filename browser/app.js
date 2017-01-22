@@ -92,8 +92,10 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 		return type + content
 	}
 	, code: function(code, lang) {
-		lang = langMap[lang] || langMap[langArr[0]]
-		return '{code:' + lang + '}\n' + code + '\n{code}\n\n'
+    lang = lang == 'shell' ? 'bash' : langMap[lang]
+    lines = lineCount(code, '\n')
+    beginCodeMarkup = lang == null ? '{code}' : lines > 20 ? '{code:language = ' + lang + '|theme=RDark|linenumbers=true|collapse=true}' : '{code:language = ' + lang + '|theme=RDark}'
+    return beginCodeMarkup + '\n' + code + '\n{code}\n\n'
 	}
 })
 
@@ -1179,6 +1181,11 @@ Parser.prototype.tok = function() {
 /**
  * Helpers
  */
+
+function lineCount(content) {
+  result = content.match(/\n/g);
+  return result != null ? result.length : 0
+}
 
 function escape(html, encode) {
   return html
