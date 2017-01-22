@@ -79,7 +79,7 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 		return body + '\n'
 	}
 	, image: function(href, title, text) {
-		return '!' + href
+		return '!' + href + '!'
 	}
 	, table: function(header, body) {
 		return header + body + '\n'
