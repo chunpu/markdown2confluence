@@ -29,6 +29,10 @@ Usage
 markdown2confluence markdown.md
 ```
 
+```sh
+cat markdown.md | markdown2confluence
+```
+
 or
 
 Try in browser <http://chunpu.github.io/markdown2confluence/browser/>
