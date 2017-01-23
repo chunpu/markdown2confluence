@@ -1,5 +1,6 @@
 var marked = require('marked')
 var _ = require('min-util')
+var qs = require('min-qs')
 var inlineLexer = marked.inlineLexer
 
 module.exports = exports = markdown2confluence
@@ -8,12 +9,16 @@ module.exports = exports = markdown2confluence
 // https://confluence.atlassian.com/display/DOC/Confluence+Wiki+Markup
 // http://blogs.atlassian.com/2011/11/why-we-removed-wiki-markup-editor-in-confluence-4/
 
+var MAX_CODE_LINE = 20
+
 function Renderer() {}
 
 var rawRenderer = marked.Renderer
 
 var langArr = 'actionscript3 bash csharp coldfusion cpp css delphi diff erlang groovy java javafx javascript perl php none powershell python ruby scala sql vb html/xml'.split(/\s+/)
-var langMap = {}
+var langMap = {
+	shell: 'bash'
+}
 for (var i = 0, x; x = langArr[i++];) {
 	langMap[x] = x
 }
@@ -70,7 +75,7 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 		return body + '\n'
 	}
 	, image: function(href, title, text) {
-		return '!' + href
+		return '!' + href + '!'
 	}
 	, table: function(header, body) {
 		return header + body + '\n'
@@ -83,8 +88,22 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 		return type + content
 	}
 	, code: function(code, lang) {
-		lang = langMap[lang] || langMap[langArr[0]]
-		return '{code:' + lang + '}\n' + code + '\n{code}\n\n'
+		// {code:language=java|borderStyle=solid|theme=RDark|linenumbers=true|collapse=true}
+		lang = langMap[lang] || ''
+		var param = {
+			language: lang,
+			borderStyle: 'solid',
+			theme: 'RDark', // dark is good
+			linenumbers: true,
+			collapse: false
+		}
+		var lineCount = _.split(code, '\n').length
+		if (lineCount > MAX_CODE_LINE) {
+			// code is too long
+			param.collapse = true
+		}
+		param = qs.stringify(param, '|', '=')
+		return '{code:' + param + '}\n' + code + '\n{code}\n\n'
 	}
 })
 

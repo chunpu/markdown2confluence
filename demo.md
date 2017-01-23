@@ -13,7 +13,7 @@ head2
 - ~~del~~
 - `code inline`
 
-> 块引用
+> block quote
 
 [github link address](https://github.com/chunpu/markdown2confluence)
 
@@ -21,6 +21,8 @@ head2
 var i = 1 // comment
 console.log("This is code block")
 ```
+
+![image](https://www.google.com.hk/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png)
 
 ## GFM support
 

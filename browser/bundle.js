@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var convert = __webpack_require__(1)
-	var demoMarkdown = __webpack_require__(14)
+	var demoMarkdown = __webpack_require__(15)
 
 	$('#convert').click(function() {
 		var markdown = $('#markdown').val()
@@ -66,6 +66,7 @@
 
 	var marked = __webpack_require__(2)
 	var _ = __webpack_require__(3)
+	var qs = __webpack_require__(14)
 	var inlineLexer = marked.inlineLexer
 
 	module.exports = exports = markdown2confluence
@@ -74,12 +75,16 @@
 	// https://confluence.atlassian.com/display/DOC/Confluence+Wiki+Markup
 	// http://blogs.atlassian.com/2011/11/why-we-removed-wiki-markup-editor-in-confluence-4/
 
+	var MAX_CODE_LINE = 20
+
 	function Renderer() {}
 
 	var rawRenderer = marked.Renderer
 
 	var langArr = 'actionscript3 bash csharp coldfusion cpp css delphi diff erlang groovy java javafx javascript perl php none powershell python ruby scala sql vb html/xml'.split(/\s+/)
-	var langMap = {}
+	var langMap = {
+		shell: 'bash'
+	}
 	for (var i = 0, x; x = langArr[i++];) {
 		langMap[x] = x
 	}
@@ -136,7 +141,8 @@
 			return body + '\n'
 		}
 		, image: function(href, title, text) {
-			return '!' + href
+			console.log(77777, href)
+			return '!' + href + '!'
 		}
 		, table: function(header, body) {
 			return header + body + '\n'
@@ -149,8 +155,22 @@
 			return type + content
 		}
 		, code: function(code, lang) {
-			lang = langMap[lang] || langMap[langArr[0]]
-			return '{code:' + lang + '}\n' + code + '\n{code}\n\n'
+			// {code:language=java|borderStyle=solid|theme=RDark|linenumbers=true|collapse=true}
+			lang = langMap[lang] || ''
+			var param = {
+				language: lang,
+				borderStyle: 'solid',
+				theme: 'RDark', // dark is good
+				linenumbers: true,
+				collapse: false
+			}
+			var lineCount = _.split(code, '\n').length
+			if (lineCount > MAX_CODE_LINE) {
+				// code is too long
+				param.collapse = true
+			}
+			param = qs.stringify(param, '|', '=')
+			return '{code:' + param + '}\n' + code + '\n{code}\n\n'
 		}
 	})
 
@@ -1963,9 +1983,24 @@
 	}
 
 	_.uniq = function(arr) {
+		return _.uniqBy(arr)
+	}
+
+	_.uniqBy = function(arr, fn) {
 		var ret = []
+		var pool = []
+		if (!is.fn(fn)) {
+			fn = null
+		}
 		each(arr, function(item) {
-			if (!includes(ret, item)) ret.push(item)
+			var val = item
+			if (fn) {
+				val = fn(item)
+			}
+			if (!includes(pool, val)) {
+				pool.push(val)
+				ret.push(item)
+			}
 		})
 		return ret
 	}
@@ -2062,7 +2097,7 @@
 		var start = args[0] || 0
 		var last = args[1] || 0
 		var step = args[2]
-		if (!is.num(step)) {
+		if (!is.number(step)) {
 			step = 1
 		}
 		var count = last - start
@@ -2129,7 +2164,7 @@
 
 	_.only = function(obj, keys) {
 		obj = obj || {}
-		if (is.str(keys)) keys = keys.split(/ +/)
+		if (is.string(keys)) keys = keys.split(/ +/)
 		return _.reduce(keys, function(ret, key) {
 			if (null != obj[key]) ret[key] = obj[key]
 			return ret
@@ -2318,7 +2353,7 @@
 	var slice = _.slice
 
 	_.bind = function(fn, ctx) {
-		if (is.str(ctx)) {
+		if (is.string(ctx)) {
 			var obj = fn
 			fn = obj[ctx]
 			ctx = obj
@@ -2589,9 +2624,14 @@
 
 	var _ = module.exports = __webpack_require__(4)
 
-	_.tostr = tostr
+	_.tostr = tostr // lodash toString
 
 	var indexOf = _.indexOf
+
+	_.split = function(str, separator, limit) {
+		str = tostr(str)
+		return str.split(separator, limit)
+	}
 
 	_.capitalize = function(str) {
 		str = tostr(str)
@@ -2622,10 +2662,12 @@
 	}
 
 	_.lower = function(str) {
+		// lodash toLower
 		return tostr(str).toLowerCase()
 	}
 
 	_.upper = function(str) {
+		// lodash toUpper
 		return tostr(str).toUpperCase()
 	}
 
@@ -2635,14 +2677,14 @@
 		}).join('')
 	}
 
-	_.padLeft = function(str, len, chars) {
+	_.padStart = function(str, len, chars) {
 		str = _.tostr(str)
 		len = len || 0
 		var delta = len - str.length
 		return getPadStr(chars, delta) + str
 	}
 
-	_.padRight = function(str, len, chars) {
+	_.padEnd = function(str, len, chars) {
 		str = _.tostr(str)
 		len = len || 0
 		var delta = len - str.length
@@ -2710,9 +2752,100 @@
 
 /***/ },
 /* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(3)
+	var is = _.is
+
+	var defaultOption = {
+		sep: '&',
+		eq: '=',
+		encode: encodeURIComponent,
+		decode: decodeURIComponent,
+		keepRaw: false,
+		sort: null,
+		ignoreValues: [undefined]
+	}
+
+	exports.parse = function(qs, sep, eq, opt) {
+		qs += ''
+		opt = getOpt(sep, eq, opt)
+		var decode = opt.decode
+		// var ret = {}
+		qs = qs.split(opt.sep)
+
+		return _.reduce(qs, function(ret, arr) {
+			arr = arr.split(opt.eq)
+			if (2 == arr.length) {
+				var k = arr[0]
+				var v = arr[1]
+				if (!opt.keepRaw) {
+					try {
+						k = decode(k)
+						v = decode(v)
+					} catch (ignore) {}
+				}
+				ret[k] = v
+			}
+			return ret
+		}, {})
+	}
+
+	exports.stringify = function(obj, sep, eq, opt) {
+		opt = getOpt(sep, eq, opt)
+
+		var keys = _.keys(obj)
+
+		var sort = opt.sort
+		if (sort) {
+			if (is.fn(sort)) {
+				keys.sort(sort)
+			} else {
+				keys.sort()
+			}
+		}
+
+		var encode = opt.encode
+
+		var arr = []
+		_.each(keys, function(key) {
+			var val = obj[key]
+			if (!_.includes(opt.ignoreValues, val)) {
+				if (is.nan(val) || null == val) {
+					val = ''
+				}
+				if (!opt.keepRaw) {
+					key = encode(key)
+					val = encode(val)
+				}
+				arr.push(key + opt.eq + val)
+			}
+		})
+		return arr.join(opt.sep)
+	}
+
+	function getOpt(sep, eq, opt) {
+		// can be
+		// _
+		// opt
+		// sep, opt
+		// sep, eq, opt
+		opt = _.find(arguments, function(val) {
+			return is.object(val)
+		})
+		sep = is.nos(sep) ? sep : undefined
+		eq = is.nos(eq) ? eq : undefined
+		opt = _.extend({}, defaultOption, opt, {sep: sep, eq: eq})
+		return opt
+	}
+
+
+
+/***/ },
+/* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "# h1\n\nhead1\n===\n\nhead2\n---\n\n### head3 ###\n\n- **strong**\n- *emphasis*\n- ~~del~~\n- `code inline`\n\n> 块引用\n\n[github link address](https://github.com/chunpu/markdown2confluence)\n\n```javascript\nvar i = 1 // comment\nconsole.log(\"This is code block\")\n```\n\n## GFM support\n\nFirst Header  | Second Header\n------------- | -------------\nContent Cell  | Content Cell\nContent Cell  | Content Cell\n*inline style* | **inline style**\n\n:)\n"
+	module.exports = "# h1\n\nhead1\n===\n\nhead2\n---\n\n### head3 ###\n\n- **strong**\n- *emphasis*\n- ~~del~~\n- `code inline`\n\n> block quote\n\n[github link address](https://github.com/chunpu/markdown2confluence)\n\n```javascript\nvar i = 1 // comment\nconsole.log(\"This is code block\")\n```\n\n![image](https://www.google.com.hk/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png)\n\n## GFM support\n\nFirst Header  | Second Header\n------------- | -------------\nContent Cell  | Content Cell\nContent Cell  | Content Cell\n*inline style* | **inline style**\n\n:)\n"
 
 /***/ }
 /******/ ]);

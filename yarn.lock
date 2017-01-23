@@ -881,9 +881,15 @@ min-is@latest:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/min-is/-/min-is-2.2.0.tgz#2d84ba26b7be7554afd470108f7265d4ce4b39b0"
 
-min-util@^1.3.3:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/min-util/-/min-util-1.10.1.tgz#1a65ae5cb0b71059e80bc23ce4ba27e448daa044"
+min-qs@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/min-qs/-/min-qs-1.3.0.tgz#3e1e50a94238656436748ff8b1da3ac9bde7b05d"
+  dependencies:
+    min-util latest
+
+min-util@^2.3.0, min-util@latest:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/min-util/-/min-util-2.3.0.tgz#95b7244de1ad8788cf3f1224dedd689176f64538"
   dependencies:
     cou latest
 
