@@ -13,3 +13,5 @@ Document
 ---
 
 [Confluence Wiki Markup](https://confluence.atlassian.com/display/CONF42/Confluence+Wiki+Markup)
+
+![demo preview](./preview.png)
