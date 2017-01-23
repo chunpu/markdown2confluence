@@ -93,7 +93,7 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 	}
 	, code: function(code, lang) {
     lang = lang == 'shell' ? 'bash' : langMap[lang]
-    lines = lineCount(code, '\n')
+    lines = lineCount(code)
     beginCodeMarkup = lang == null ? '{code}' : lines > 20 ? '{code:language = ' + lang + '|theme=RDark|linenumbers=true|collapse=true}' : '{code:language = ' + lang + '|theme=RDark}'
     return beginCodeMarkup + '\n' + code + '\n{code}\n\n'
 	}
