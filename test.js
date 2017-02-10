@@ -71,41 +71,41 @@ test('quote', function() {
 })
 
 describe('hyperlink', function() {
-    it('with no text or title', function () {
+    test('with no text or title', function () {
         expect(md2conflu('[](http://github.com)')).toBe('[http://github.com]\n\n')
         expect(md2conflu('http://github.com')).toBe('[http://github.com|http://github.com]\n\n')
     })
-    it('with text', function () {
+    test('with text', function () {
         expect(md2conflu('[github](http://github.com)')).toBe('[github|http://github.com]\n\n')
     })
-    it('with title', function () {
+    test('with title', function () {
         expect(md2conflu('[](http://github.com "Github")')).toBe('[http://github.com|Github]\n\n')
     })
-    it('with text and title', function () {
+    test('with text and title', function () {
         expect(md2conflu('[github](http://github.com "Github")')).toBe('[github|http://github.com|Github]\n\n')
     })
 })
 
 describe('image link', function () {
-    it('without alt', function() {
+    test('without alt', function() {
         expect(md2conflu('![](http://github.com/logo.png)')).toBe('!http://github.com/logo.png!\n\n')
     })
-    it('with alt', function() {
+    test('with alt', function() {
         expect(md2conflu('![logo](http://github.com/logo.png)')).toBe('!http://github.com/logo.png|alt=logo!\n\n')
     })
 });
 
 describe('horizontal rule', function() {
-    it('* * *', function() {
+    test('* * *', function() {
         expect(md2conflu('* * *')).toBe('----')
     })
-    it('***', function() {
+    test('***', function() {
         expect(md2conflu('***')).toBe('----')
     })
-    it('*****', function() {
+    test('*****', function() {
         expect(md2conflu('*****')).toBe('----')
     })
-    it('---------------------------------------', function() {
+    test('---------------------------------------', function() {
         expect(md2conflu('---------------------------------------')).toBe('----')
     })
 })
