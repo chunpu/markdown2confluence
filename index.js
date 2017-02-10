@@ -57,7 +57,10 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 	, link: function(href, title, text) {
 		var arr = [href]
 		if (title) {
-			arr.unshift(title)
+			arr.push(title)
+		}
+		if (text) {
+			arr.unshift(text)
 		}
 		return '[' + arr.join('|') + ']'
 	}
