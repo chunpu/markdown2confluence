@@ -86,14 +86,14 @@ describe('hyperlink', function() {
     })
 })
 
-test('image link without alt', function() {
-    expect(md2conflu('![](http://github.com/logo.png)')).toBe('!http://github.com/logo.png!\n\n')
-})
-
-// FIX - failing test
-test.skip('image link with alt', function() {
-    expect(md2conflu('![logo](http://github.com/logo.png)')).toBe('!http://github.com/logo.png|alt=logo!\n\n')
-})
+describe('image link', function () {
+    it('without alt', function() {
+        expect(md2conflu('![](http://github.com/logo.png)')).toBe('!http://github.com/logo.png!\n\n')
+    })
+    it('with alt', function() {
+        expect(md2conflu('![logo](http://github.com/logo.png)')).toBe('!http://github.com/logo.png|alt=logo!\n\n')
+    })
+});
 
 describe('horizontal rule', function() {
     it('* * *', function() {
