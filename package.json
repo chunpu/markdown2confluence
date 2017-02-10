@@ -4,7 +4,7 @@
   "description": "convert markdown to confluence markup",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest test.js",
     "build": "npm run build-html && npm run build-js",
     "build-html": "jade -p node_modules/jade-gist/. < browser/index.jade > browser/index.html",
     "build-js": "webpack browser/app.js --output-filename=browser/bundle.js",
