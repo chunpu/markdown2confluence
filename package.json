@@ -24,7 +24,9 @@
   "bin": {
     "markdown2confluence": "bin/markdown2confluence.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^18.1.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/chunpu/markdown2confluence.git"
