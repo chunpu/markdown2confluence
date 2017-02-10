@@ -14,7 +14,7 @@ if (filename != null) {
         console.log(md2conflu(buf + ''))
     })
 } else {
-    stdin(function (str) {
+    stdin().then(function (str) {
         console.log(md2conflu(str))
     })
 }
