@@ -64,8 +64,59 @@ describe('unordered list', function() {
     })
 })
 
-test('ordered list', function() {
-    expect(md2conflu('1. this\n2. is\n3. a\n4. list\n' )).toBe('# this\n# is\n# a\n# list\n\n')
+describe('ordered list', function() {
+    test('basic', function() {
+        var list = ''.concat(
+            '1. this\n',
+            '1. is\n',
+            '1. a\n',
+            '1. list\n'
+        )
+        var confluence_list = list.replace(/1\./g, '#') + '\n'
+        expect(md2conflu(list)).toBe(confluence_list)
+    })
+    test('nested', function() {
+        var markdownList = ''.concat(
+            '1. this\n',
+            '1. is\n',
+            '  1. nested\n',
+            '    1. deep nested\n',
+            '1. a\n',
+            '  1. nested\n',
+            '1. list\n'
+        )
+        var confluence_list = ''.concat(
+            '# this\n',
+            '# is\n',
+            '## nested\n',
+            '### deep nested\n',
+            '# a\n',
+            '## nested\n',
+            '# list\n\n'
+        )
+        expect(md2conflu(markdownList)).toBe(confluence_list)
+    })
+    test('nested mixed', function() {
+        var markdownList = ''.concat(
+            '1. this\n',
+            '1. is\n',
+            '  - nested\n',
+            '    - deep nested\n',
+            '1. a\n',
+            '  - nested\n',
+            '1. list\n'
+        )
+        var confluence_list = ''.concat(
+            '# this\n',
+            '# is\n',
+            '#* nested\n',
+            '#** deep nested\n',
+            '# a\n',
+            '#* nested\n',
+            '# list\n\n'
+        )
+        expect(md2conflu(markdownList)).toBe(confluence_list)
+    })
 })
 
 test('strong text', function() {
