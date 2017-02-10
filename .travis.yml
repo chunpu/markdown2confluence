@@ -1,4 +1,7 @@
 language: node_js
+node_js:
+  - 'node'
+  - '6'
 branches:
   only:
   - gh-pages
