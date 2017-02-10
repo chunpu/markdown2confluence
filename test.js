@@ -70,9 +70,20 @@ test('quote', function() {
     expect(md2conflu('> this is a quote')).toBe('{quote}this is a quote\n\n{quote}')
 })
 
-// FIX - failing test
-test.skip('hyperlink', function() {
-    expect(md2conflu('[github](http://github.com)')).toBe('[github|http://github.com]\n\n')
+describe('hyperlink', function() {
+    it('with no text or title', function () {
+        expect(md2conflu('[](http://github.com)')).toBe('[http://github.com]\n\n')
+        expect(md2conflu('http://github.com')).toBe('[http://github.com|http://github.com]\n\n')
+    })
+    it('with text', function () {
+        expect(md2conflu('[github](http://github.com)')).toBe('[github|http://github.com]\n\n')
+    })
+    it('with title', function () {
+        expect(md2conflu('[](http://github.com "Github")')).toBe('[http://github.com|Github]\n\n')
+    })
+    it('with text and title', function () {
+        expect(md2conflu('[github](http://github.com "Github")')).toBe('[github|http://github.com|Github]\n\n')
+    })
 })
 
 test('image link without alt', function() {
