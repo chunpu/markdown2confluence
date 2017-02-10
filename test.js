@@ -7,8 +7,8 @@ var pairs = [
     , ['###  h3', 'h3. h3\n\n']
 ]
 
-pairs.forEach(function(arr, i) {
-    assert.equal(md2conflu(arr[0]), arr[1], i + ': ' + arr[0] + ' = ' + arr[1])
+test('basic', function() {
+    pairs.forEach(function(arr, i) {
+        expect(md2conflu(arr[0])).toBe(arr[1])
+    })
 })
-
-console.log('all pass!')
