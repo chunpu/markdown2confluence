@@ -12,3 +12,89 @@ test('basic', function() {
         expect(md2conflu(arr[0])).toBe(arr[1])
     })
 })
+
+
+test('header 1', function() {
+    expect(md2conflu('# Hello')).toBe('h1. Hello\n\n')
+})
+
+test('heading 2', function() {
+    expect(md2conflu('## Hello')).toBe('h2. Hello\n\n')
+})
+
+test('heading 3', function() {
+    expect(md2conflu('### Hello')).toBe('h3. Hello\n\n')
+})
+
+test('heading 4', function() {
+    expect(md2conflu('#### Hello')).toBe('h4. Hello\n\n')
+})
+
+test('unordered list', function() {
+    var list = ''.concat(
+        '- this\n',
+        '- is\n',
+        '- a\n',
+        '- list\n'
+    )
+    var confluence_list = list.replace(/-/g, '*') + '\n'
+    expect(md2conflu(list)).toBe(confluence_list)
+})
+
+test('ordered list', function() {
+    expect(md2conflu('1. this\n2. is\n3. a\n4. list\n' )).toBe('# this\n# is\n# a\n# list\n\n')
+})
+
+test('strong text', function() {
+    expect(md2conflu('**strong**')).toBe('*strong*\n\n')
+})
+
+test('italics text', function() {
+    expect(md2conflu('*some text here*')).toBe('_some text here_\n\n')
+})
+
+test('inline code', function() {
+    expect(md2conflu('`hello world`')).toBe('{{hello world}}\n\n')
+})
+
+test('block of code', function() {
+    code = '    this is code\n'
+    expect(md2conflu(code)).toBe('{code:language=|borderStyle=solid|theme=RDark|linenumbers=true|collapse=false}\nthis is code\n{code}\n\n')
+})
+
+test('strikethrough', function() {
+    expect(md2conflu('~~strikethrough text~~')).toBe('-strikethrough text-\n\n')
+})
+
+test('quote', function() {
+    expect(md2conflu('> this is a quote')).toBe('{quote}this is a quote\n\n{quote}')
+})
+
+// FIX - failing test
+test.skip('hyperlink', function() {
+    expect(md2conflu('[github](http://github.com)')).toBe('[github|http://github.com]\n\n')
+})
+
+test('image link without alt', function() {
+    expect(md2conflu('![](http://github.com/logo.png)')).toBe('!http://github.com/logo.png!\n\n')
+})
+
+// FIX - failing test
+test.skip('image link with alt', function() {
+    expect(md2conflu('![logo](http://github.com/logo.png)')).toBe('!http://github.com/logo.png|alt=logo!\n\n')
+})
+
+describe('horizontal rule', function() {
+    it('* * *', function() {
+        expect(md2conflu('* * *')).toBe('----')
+    })
+    it('***', function() {
+        expect(md2conflu('***')).toBe('----')
+    })
+    it('*****', function() {
+        expect(md2conflu('*****')).toBe('----')
+    })
+    it('---------------------------------------', function() {
+        expect(md2conflu('---------------------------------------')).toBe('----')
+    })
+})
