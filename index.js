@@ -75,7 +75,10 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 			return line
 		})
 		return _.map(arr, function(line) {
-			var lineStart = type + !_.startsWith(line, type) ? SPACE : ''
+			var lineStart = type
+			if (!(_.startsWith(line, '#') || _.startsWith(line, '*'))) {
+				lineStart += SPACE
+			}
 			return lineStart + line
 		}).join('\n') + '\n\n'
 
