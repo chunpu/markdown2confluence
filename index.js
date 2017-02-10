@@ -78,7 +78,11 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 		return body + '\n'
 	}
 	, image: function(href, title, text) {
-		return '!' + href + '!'
+		var arr = [href]
+		if (text) {
+			arr.push('alt=' + text)
+		}
+		return '!' + arr.join('|') + '!'
 	}
 	, table: function(header, body) {
 		return header + body + '\n'
