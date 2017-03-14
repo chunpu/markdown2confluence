@@ -56,8 +56,8 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 	}
 	, link: function(href, title, text) {
 		var arr = [href]
-		if (title) {
-			arr.unshift(title)
+		if (title || text) {
+			arr.unshift(title || text)
 		}
 		return '[' + arr.join('|') + ']'
 	}
