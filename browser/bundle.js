@@ -122,8 +122,8 @@
 		}
 		, link: function(href, title, text) {
 			var arr = [href]
-			if (title) {
-				arr.unshift(title)
+			if (text) {
+				arr.unshift(text)
 			}
 			return '[' + arr.join('|') + ']'
 		}
@@ -141,7 +141,6 @@
 			return body + '\n'
 		}
 		, image: function(href, title, text) {
-			console.log(77777, href)
 			return '!' + href + '!'
 		}
 		, table: function(header, body) {
