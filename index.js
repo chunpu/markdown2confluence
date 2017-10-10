@@ -19,7 +19,7 @@ var langArr = 'actionscript3 bash csharp coldfusion cpp css delphi diff erlang g
 var langMap = {
 	shell: 'bash', 
 	html: 'html', 
-	xml: 'xml', 
+	xml: 'xml'
 }
 for (var i = 0, x; x = langArr[i++];) {
 	langMap[x] = x
