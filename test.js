@@ -133,7 +133,7 @@ test('inline code', function() {
 
 test('block of code', function() {
     code = '    this is code\n'
-    expect(md2conflu(code)).toBe('{code:language=|borderStyle=solid|theme=RDark|linenumbers=true|collapse=false}\nthis is code\n{code}\n\n')
+    expect(md2conflu(code)).toBe('{code:language=none|borderStyle=solid|theme=RDark|linenumbers=true|collapse=false}\nthis is code\n{code}\n\n')
 })
 
 test('strikethrough', function() {
