@@ -18,7 +18,9 @@ var rawRenderer = marked.Renderer
 
 var langArr = 'actionscript3 bash csharp coldfusion cpp css delphi diff erlang groovy java javafx javascript perl php none powershell python ruby scala sql vb html/xml'.split(/\s+/)
 var langMap = {
-	shell: 'bash'
+	shell: 'bash',
+	html: 'html',
+	xml: 'xml'
 }
 for (var i = 0, x; x = langArr[i++];) {
 	langMap[x] = x
@@ -105,7 +107,10 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 	}
 	, code: function(code, lang) {
 		// {code:language=java|borderStyle=solid|theme=RDark|linenumbers=true|collapse=true}
-		lang = langMap[lang] || ''
+		if(lang) {
+			lang = lang.toLowerCase()
+		}
+		lang = langMap[lang] || 'none'
 		var param = {
 			language: lang,
 			borderStyle: 'solid',
