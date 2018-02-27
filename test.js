@@ -5,6 +5,7 @@ var pairs = [
       ['# h1', 'h1. h1\n\n']
     , ['head1\n===', 'h1. head1\n\n']
     , ['###  h3', 'h3. h3\n\n']
+    , ['- item\n  - nested', '\n* item\n** nested\n\n']
 ]
 
 pairs.forEach(function(arr, i) {
