@@ -68,10 +68,16 @@ _.extend(Renderer.prototype, rawRenderer.prototype, {
 			return line
 		})
 		var type = ordered ? '#' : '*'
-		return _.map(arr, function(line) {
-			return type + ' ' + line
+		return '\n' + _.map(arr, function(line) {
+			var bullet = type
+			if (!/^[*#]+ /.test(line)) {
+				// When the line starts with '# ' or '* ', it means that it is
+				// a nested list. '* * ' should be squashed to '** ' in the
+				// case.
+				bullet += ' '
+			}
+			return bullet + line;
 		}).join('\n') + '\n\n'
-
 	}
 	, listitem: function(body, ordered) {
 		return body + '\n'
